@@ -5,7 +5,11 @@ import { InboxOutlined } from "@ant-design/icons";
 
 const { Dragger } = Upload;
 
-const CVFeedbackApp = () => {
+const CVFeedbackApp = ({
+  sendMessage,
+}: {
+  sendMessage: (userPrompt: FormData) => Promise<string>;
+}) => {
   const [file, setFile] = useState(null);
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,27 +31,11 @@ const CVFeedbackApp = () => {
     }
 
     setLoading(true);
-    // TODO: Send the file to your backend to interact with the LLM API
-    setTimeout(() => {
-      setFeedback(`
-        Thank you for submitting your CV. Here's some feedback:
-
-        1. Structure: Your CV has a good overall structure, but consider reorganizing sections for better flow.
-        2. Skills: Highlight your technical skills more prominently.
-        3. Experience: Quantify your achievements with specific metrics where possible.
-        4. Education: Include relevant coursework or projects.
-        5. Formatting: Ensure consistent formatting throughout the document.
-
-        Action items:
-        - Add a concise professional summary at the top.
-        - Create a dedicated skills section with proficiency levels.
-        - Use bullet points for work experience achievements.
-        - Include a section for certifications and awards.
-
-        Overall, your CV shows strong potential. Implementing these suggestions will make it even more impactful to potential employers in the tech sector.
-      `);
-      setLoading(false);
-    }, 3000);
+    const formData = new FormData();
+    formData.append("cv", file);
+    const feedback = await sendMessage(formData);
+    setFeedback(feedback);
+    setLoading(false);
   };
 
   return (
