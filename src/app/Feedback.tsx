@@ -42,7 +42,6 @@ const CVFeedbackApp = ({
 
   return (
     <div className="p-4 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">CV Feedback Tool</h1>
       <Dragger
         accept=".pdf,.doc,.docx"
         onChange={handleFileUpload}

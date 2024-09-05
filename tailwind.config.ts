@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        caveat: ["Caveat", "cursive"],
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
