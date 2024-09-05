@@ -4,6 +4,7 @@ import { Upload, Button, Card, Spin, message } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { UploadChangeParam } from "antd/es/upload";
 
 const { Dragger } = Upload;
 
@@ -16,9 +17,10 @@ const CVFeedbackApp = ({
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleFileUpload = (info) => {
+  const handleFileUpload = (info: UploadChangeParam) => {
     const { status } = info.file;
     if (status === "done") {
+      // @ts-expect-error: any is ok here
       setFile(info.file.originFileObj);
       message.success(`${info.file.name} file uploaded successfully.`);
     } else if (status === "error") {
