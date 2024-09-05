@@ -6,7 +6,6 @@ import pdf from "pdf-parse-debugging-disabled";
 // Server Function
 export async function sendMessage(formData: FormData): Promise<string> {
   const fileContent = await parsePDF(formData);
-  console.log(fileContent);
 
   const prompt = `
         You are an expert CV reviewer for the tech industry. Analyze the following CV and provide detailed, actionable feedback. Focus on:
@@ -68,7 +67,6 @@ async function fetchGeminiData(userInput: string) {
     }
 
     const data = await response.text(); // Response is plain text
-    console.log("Gemini Response:", data);
     return data;
   } catch (error) {
     console.error("There was a problem with the fetch operation:", error);
@@ -88,7 +86,6 @@ interface File {
 
 async function parsePDF(formData: FormData) {
   const file = formData.get("cv") as File;
-  console.log("file");
 
   if (!file) {
     return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
@@ -104,9 +101,8 @@ async function parsePDF(formData: FormData) {
 
   // Convert file to ArrayBuffer
   const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
 
   // Extract text from PDF
-  const data = await pdf(buffer);
+  const data = await pdf(arrayBuffer);
   return data.text;
 }
