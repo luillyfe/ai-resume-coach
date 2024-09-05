@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { Upload, Button, Card, Spin, message } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const { Dragger } = Upload;
 
@@ -67,7 +69,12 @@ const CVFeedbackApp = ({
       {loading && <Spin className="mb-4" />}
       {feedback && (
         <Card title="CV Feedback" className="mb-4">
-          <pre className="whitespace-pre-wrap">{feedback}</pre>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            className="prose max-w-none"
+          >
+            {feedback}
+          </ReactMarkdown>
         </Card>
       )}
     </div>
