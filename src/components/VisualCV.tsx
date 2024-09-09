@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { User, Briefcase, GraduationCap, Code, Award } from "lucide-react";
-import { CVData } from "@/app/LLM/LLMClient";
+import { CVData } from "@/app/LLM";
 
 /**
  *  Renders a visually appealing CV based on the provided data,

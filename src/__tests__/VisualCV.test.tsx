@@ -1,11 +1,11 @@
 import React from "react";
 
-import VisualCV from "@/components/VisualCV";
-import { CVData } from "@/app/LLM/LLMClient";
-
 import "@testing-library/jest-dom/vitest";
 import { describe, expect, it, vi } from "vitest";
 import { render } from "@testing-library/react";
+
+import { CVData } from "@/app/LLM";
+import VisualCV from "@/components/VisualCV";
 
 // Mock the ResizeObserver
 const ResizeObserverMock = vi.fn(() => ({
