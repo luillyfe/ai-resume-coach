@@ -1,6 +1,6 @@
 import React from "react";
 
-import VisualCV from "../components/VisualCV";
+import VisualCV from "@/components/VisualCV";
 import { CVData } from "@/app/LLM/LLMClient";
 
 import "@testing-library/jest-dom/vitest";
