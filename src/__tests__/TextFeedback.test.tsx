@@ -1,6 +1,5 @@
 "use client";
 
-import "@testing-library/jest-dom/vitest";
 import { describe, expect, it, vi } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import TextFeedback from "@/components/TextFeedback";

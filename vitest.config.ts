@@ -11,6 +11,9 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
+    // For test cleaning
     globals: true,
+    // For jes-dom vitest integration
+    setupFiles: ["./setupTests.ts"],
   },
 });
