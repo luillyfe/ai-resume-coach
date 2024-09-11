@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, MouseEvent } from "react";
 
 import { Button, Card, Spin, message } from "antd";
 import { RcFile } from "antd/es/upload";
@@ -33,13 +33,17 @@ const TextFeedback = ({
    * Displays an error message if no file is uploaded.
    * Sets the loading state while waiting for the feedback.
    */
-  const getFeedback = async () => {
+  const getFeedback = async (event: MouseEvent) => {
+    // This ensures the feedback request is isolated to this component
+    event.stopPropagation();
+
+    // Worth keeping the check as a form of defensive programming.
     if (!file) {
       message.error("Please upload a CV first");
       return;
     }
-    const formData = new FormData();
 
+    const formData = new FormData();
     setLoading(true);
     formData.append("cv", file);
     await requestCVFeedback(formData);
