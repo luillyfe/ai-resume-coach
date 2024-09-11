@@ -3,6 +3,29 @@ import { NextResponse } from "next/server";
 // @ts-expect-error: no types were found on registry
 import pdf from "pdf-parse-debugging-disabled";
 
+// Define the CV data schema
+export interface CVData {
+  name: string;
+  title: string;
+  summary: string;
+  experience: Array<{
+    position: string;
+    company: string;
+    duration: string;
+    responsibilities: string[];
+  }>;
+  skills: Array<{
+    skill: string;
+    proficiency: number;
+  }>;
+  education: Array<{
+    degree: string;
+    school: string;
+    year: string;
+  }>;
+  achievements: string[];
+}
+
 // Server Function
 export async function sendMessage(formData: FormData): Promise<string> {
   const fileContent = await parsePDF(formData);
