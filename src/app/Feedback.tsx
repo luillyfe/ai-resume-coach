@@ -1,4 +1,5 @@
 "use client";
+// TODO: This component wil be replace by the new TextFeedback component
 import React, { useState } from "react";
 import { Upload, Button, Card, Spin, message } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
