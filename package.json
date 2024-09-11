@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.4.0",
     "@tailwindcss/typography": "^0.5.15",
     "antd": "^5.20.5",
     "class-variance-authority": "^0.7.0",
