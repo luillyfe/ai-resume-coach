@@ -14,29 +14,21 @@ vi.mock("@/lib/PDFUtils", () => ({
   parsePDF: vi.fn(),
 }));
 
-// Mock the LLMUtils module
-vi.mock("@/lib/LLMUtils", () => ({
-  formatGeminiOutput: vi.fn((args) => args.response.candidates[0].content),
-}));
-
 describe("LLM Actions", () => {
   describe("requestCVFeedback", () => {
     it("should send the correct prompt to the LLM and return the formatted feedback", async () => {
       const mockFormData = new FormData();
       const mockFileContent = "This is a mock CV content.";
-      const mockGeminiResponse = {
-        response: {
-          candidates: [
-            {
-              content: `{ "some": "json" }`,
-            },
-          ],
-        },
-      };
+      const mockGeminiResponse = JSON.stringify({
+        candidates: [
+          {
+            content: { parts: [{ text: "json" }] },
+          },
+        ],
+      });
 
       // Set up mock implementations
       vi.mocked(parsePDF).mockResolvedValue(mockFileContent);
-      // @ts-expect-error: expect string
       vi.mocked(sendMessage).mockResolvedValue(mockGeminiResponse);
 
       const response = await requestCVFeedback(mockFormData);
@@ -45,7 +37,7 @@ describe("LLM Actions", () => {
       expect(sendMessage).toHaveBeenCalledWith(
         expect.stringContaining(mockFileContent)
       );
-      expect(response.feedback).toBe(`{ "some": "json" }`);
+      expect(response.feedback).toBe("json");
     });
   });
 
@@ -53,16 +45,27 @@ describe("LLM Actions", () => {
     it("should send the correct extraction prompt to the LLM and return the parsed CV data", async () => {
       const mockFeedback = "Some feedback about the CV";
       const mockOriginalCV = "Original CV content";
-      const mockStructuredDataResponse = {
-        response: {
-          candidates: [
-            {
-              content:
-                '{ "name": "John Doe", "title": "", "summary": "", "experience": [], "skills": [], "education": [], "achievements": [] }',
+      const mockStructuredDataResponse = JSON.stringify({
+        candidates: [
+          {
+            content: {
+              parts: [
+                {
+                  text: JSON.stringify({
+                    name: "John Doe",
+                    title: "",
+                    summary: "",
+                    experience: [],
+                    skills: [],
+                    education: [],
+                    achievements: [],
+                  }),
+                },
+              ],
             },
-          ],
-        },
-      };
+          },
+        ],
+      });
       const expectedCVData: CVData = {
         name: "John Doe",
         title: "",
@@ -73,7 +76,6 @@ describe("LLM Actions", () => {
         achievements: [],
       };
 
-      // @ts-expect-error: expect string
       vi.mocked(sendMessage).mockResolvedValue(mockStructuredDataResponse);
 
       const cvData = await extractCVData(mockFeedback, mockOriginalCV);
@@ -89,15 +91,27 @@ describe("LLM Actions", () => {
     it("should handle errors during JSON parsing and return a default CVData object", async () => {
       const mockFeedback = "Some feedback";
       const mockOriginalCV = "Original CV";
-      const mockStructuredDataResponse = {
-        response: {
-          candidates: [
-            {
-              content: "```json\nInvalid JSON\n```",
+      const mockStructuredDataResponse = JSON.stringify({
+        candidates: [
+          {
+            content: {
+              parts: [
+                {
+                  text: {
+                    name: "John Doe",
+                    title: "",
+                    summary: "",
+                    experience: [],
+                    skills: [],
+                    education: [],
+                    achievements: [],
+                  },
+                },
+              ],
             },
-          ],
-        },
-      };
+          },
+        ],
+      });
       const defaultCVData: CVData = {
         name: "",
         title: "",
@@ -108,7 +122,6 @@ describe("LLM Actions", () => {
         achievements: [],
       };
 
-      // @ts-expect-error: expect string
       vi.mocked(sendMessage).mockResolvedValue(mockStructuredDataResponse);
 
       // Temporarily suppress console.error
