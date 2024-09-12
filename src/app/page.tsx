@@ -1,25 +1,31 @@
 "use client";
 import { useState } from "react";
 
+import { RcFile } from "antd/es/upload";
+
+import { useCVStorage } from "@/app/hooks/useCVStorage";
 import { extractCVData, requestCVFeedback } from "@/app/actions/LLM";
 import { PDFUploader } from "@/components/PDFUploader";
 import TextFeedback from "@/components/TextFeedback";
-import { RcFile } from "antd/es/upload";
 import VisualCV from "@/components/VisualCV";
-import { CVData } from "./LLM/LLMClient";
 
 export default function Home() {
   const [file, setFile] = useState<RcFile | undefined>();
-  const [feedback, setFeedback] = useState<string>("");
-  const [cvData, setCvData] = useState<CVData | null>(null);
+
+  const { feedback, cvData, updateStorage } = useCVStorage();
 
   async function handleRequestCVFeedback(formData: FormData) {
-    const { feedback } = await requestCVFeedback(formData);
-    setFeedback(feedback);
+    try {
+      const { feedback } = await requestCVFeedback(formData);
+      updateStorage({ feedback });
 
-    if (file && feedback) {
-      // Extract structured CV data from Gemini output
-      setCvData(await extractCVData(feedback, await file.text()));
+      if (file && feedback) {
+        const extractedData = await extractCVData(feedback, await file.text());
+        updateStorage({ cvData: extractedData });
+      }
+    } catch (error) {
+      console.error("Error in handleRequestCVFeedback:", error);
+      // TODO: Set an error state here and display it to the user
     }
   }
 
