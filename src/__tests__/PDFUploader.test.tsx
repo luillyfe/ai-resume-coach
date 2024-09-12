@@ -4,11 +4,14 @@ import { describe, it, expect, vi } from "vitest";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import { PDFUploader } from "@/components/PDFUploader";
 
-// Mock the antd message component
+// Mock the antd Upload component
 vi.mock("antd", async () => {
   const actual = await vi.importActual("antd");
   return {
     ...actual,
+    // Mocking Upload is a need since `handleFile` is only called when the status is `done`.
+    // This status change in the behavior of the Ant Design `Upload` component is being mocked
+    // to simulate a successful upload.
     Upload: {
       Dragger: ({ onChange }: { onChange: ({}) => void }) => {
         return (
