@@ -75,13 +75,13 @@ export const useCVStorage = () => {
 
   // Load data from localStorage on component mount
   useEffect(() => {
-    const savedData = localStorage.getItem("cvStorage");
-    if (savedData) {
-      try {
+    try {
+      const savedData = localStorage.getItem("cvStorage");
+      if (savedData) {
         setStorage(JSON.parse(savedData));
-      } catch (error) {
-        console.error("Failed to parse CV storage data:", error);
       }
+    } catch (error) {
+      console.error("Failed to parse CV storage data:", error);
     }
   }, []);
 
