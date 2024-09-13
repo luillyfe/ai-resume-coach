@@ -2,6 +2,7 @@
 import { useState } from "react";
 
 import { RcFile } from "antd/es/upload";
+import { message } from "antd";
 
 import { useCVStorage } from "@/app/hooks/useCVStorage";
 import { extractCVData, requestCVFeedback } from "@/app/actions/LLM";
@@ -25,7 +26,9 @@ export default function Home() {
       }
     } catch (error) {
       console.error("Error in handleRequestCVFeedback:", error);
-      // TODO: Set an error state here and display it to the user
+      message.error(
+        "There was a problem on your request, try again in a few seconds!"
+      );
     }
   }
 
