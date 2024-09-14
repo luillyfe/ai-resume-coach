@@ -41,7 +41,7 @@ describe("TextFeedback Component", () => {
       />
     );
 
-    // getByText returns an span element making impossible to text the disable property of the button
+    // `getByText` returns an span element making impossible to test the disable property of a button. So we are using `getByRole` instead.
     const getFeedbackBtn = screen.getByRole("button", {
       name: /get feedback/i,
     });
