@@ -1,14 +1,11 @@
 "use server";
-import { parsePDF } from "@/lib/PDFUtils";
-import { CVData, sendMessage } from "@/app/LLM/LLMClient";
+import { CVData, sendMessage, uploadFile } from "@/app/LLM/LLMClient";
 import { formatGeminiOutput } from "@/lib/LLMUtils";
 
 // Server Function
 export async function requestCVFeedback(
-  formData: FormData
+  resumeUri: string
 ): Promise<{ feedback: string }> {
-  const fileContent = await parsePDF(formData);
-
   const prompt = `
           You are an expert CV reviewer for the tech industry. Analyze the following CV and provide detailed, actionable feedback. Focus on:
           1. Overall structure and formatting
@@ -21,21 +18,17 @@ export async function requestCVFeedback(
     
           Provide specific suggestions for improvement and highlight any red flags. 
           Format your response in markdown for easy reading.
-    
-          Here's the CV content:
-    
-          ${fileContent}
         `;
 
-  const geminiData = await sendMessage(prompt);
+  const geminiData = await sendMessage(prompt, resumeUri);
   const feedback = formatGeminiOutput(geminiData);
 
   return { feedback };
 }
 
 export async function extractCVData(
-  feedbackResponse: string,
-  originalCV: string
+  resumeUri: string,
+  feedbackResponse: string
 ): Promise<CVData> {
   const extractionPrompt = `
       Based on the original CV content and the feedback provided, extract and structure the following information in a JSON format:
@@ -57,16 +50,13 @@ export async function extractCVData(
       8. improvementAreas: An array of 3 key areas for improvement based on the feedback
       9. overallScore: A number from 1-100 representing the overall quality of the CV
   
-      Original CV:
-      ${originalCV}
-  
       Feedback:
       ${feedbackResponse}
   
       Ensure all data is accurately extracted or reasonably inferred from the provided information. If any information is missing, use placeholder text or omit the field. Please remove \`\`\`json and \`\`\` from the output.
     `;
 
-  const structuredDataResponse = await sendMessage(extractionPrompt);
+  const structuredDataResponse = await sendMessage(extractionPrompt, resumeUri);
 
   try {
     // From json string to json object
@@ -84,4 +74,9 @@ export async function extractCVData(
       achievements: [],
     };
   }
+}
+
+export async function sendFileToLLM(formData: FormData): Promise<string> {
+  const file = formData.get("cv") as File;
+  return await uploadFile(file);
 }
