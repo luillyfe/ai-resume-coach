@@ -5,7 +5,11 @@ import { RcFile } from "antd/es/upload";
 import { message } from "antd";
 
 import { useCVStorage } from "@/app/hooks/useCVStorage";
-import { extractCVData, requestCVFeedback } from "@/app/actions/LLM";
+import {
+  extractCVData,
+  requestCVFeedback,
+  sendFileToLLM,
+} from "@/app/actions/LLM";
 import { PDFUploader } from "@/components/PDFUploader";
 import TextFeedback from "@/components/TextFeedback";
 import VisualCV from "@/components/VisualCV";
@@ -17,11 +21,12 @@ export default function Home() {
 
   async function handleRequestCVFeedback(formData: FormData) {
     try {
-      const { feedback } = await requestCVFeedback(formData);
+      const fileUri = await sendFileToLLM(formData);
+      const { feedback } = await requestCVFeedback(fileUri);
       updateStorage({ feedback });
 
-      if (file && feedback) {
-        const extractedData = await extractCVData(feedback, await file.text());
+      if (fileUri && feedback) {
+        const extractedData = await extractCVData(fileUri, feedback);
         updateStorage({ cvData: extractedData });
       }
     } catch (error) {
