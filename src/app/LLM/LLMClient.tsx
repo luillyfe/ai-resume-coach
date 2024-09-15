@@ -26,14 +26,28 @@ export interface CVData {
 const API_KEY = process.env.GEMINI_API_KEY;
 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-exp-0827:generateContent?key=${API_KEY}`;
 
-export async function sendMessage(userInput: string): Promise<string> {
+export async function sendMessage(
+  prompt: string,
+  fileUri: string
+): Promise<string> {
   const requestBody = {
     contents: [
       {
         role: "user",
         parts: [
           {
-            text: userInput, // The user input
+            fileData: {
+              fileUri,
+              mimeType: "application/pdf",
+            },
+          },
+        ],
+      },
+      {
+        role: "user",
+        parts: [
+          {
+            text: prompt,
           },
         ],
       },
@@ -66,4 +80,26 @@ export async function sendMessage(userInput: string): Promise<string> {
     console.error("There was a problem with the fetch operation:", error);
     return "";
   }
+}
+
+export async function uploadFile(file: File): Promise<string> {
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/upload/v1beta/files?key=${API_KEY}`,
+    {
+      method: "POST",
+      headers: {
+        "X-Goog-Upload-Command": "upload, finalize",
+        "X-Goog-Upload-Protocol": "raw",
+        "Content-Type": file.type,
+      },
+      body: file,
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  return data.file.uri;
 }
