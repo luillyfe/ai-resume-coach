@@ -1,31 +1,77 @@
 "use server";
+/**
+ * @fileoverview CV Processor Module
+ *
+ * This module provides functionality to interact with the Gemini AI model API
+ * for processing and analyzing CV (Curriculum Vitae) data. It includes methods
+ * for sending prompts along with CV files to the API and uploading files.
+ *
+ * @module CVProcessor
+ */
 
-// Define the CV data schema
+/**
+ * @constant {string} API_KEY - The API key for authenticating requests to the Gemini API.
+ * @private
+ */
+const API_KEY = process.env.GEMINI_API_KEY;
+
+/**
+ * @constant {string} apiUrl - The URL endpoint for the Gemini API.
+ * @private
+ */
+const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-exp-0827:generateContent?key=${API_KEY}`;
+
+/**
+ * Represents the structure of a CV (Curriculum Vitae).
+ * @interface CVData
+ */
 export interface CVData {
+  /** The full name of the CV owner */
   name: string;
+  /** The professional title or position */
   title: string;
+  /** A brief summary or objective statement */
   summary: string;
+  /** An array of work experiences */
   experience: Array<{
+    /** Job position or role */
     position: string;
+    /** Name of the company or organization */
     company: string;
+    /** Duration of employment */
     duration: string;
+    /** List of job responsibilities or achievements */
     responsibilities: string[];
   }>;
+  /** An array of skills and their proficiency levels */
   skills: Array<{
+    /** Name of the skill */
     skill: string;
+    /** Proficiency level (typically on a scale, e.g., 1-10) */
     proficiency: number;
   }>;
+  /** An array of educational qualifications */
   education: Array<{
+    /** Degree or certification obtained */
     degree: string;
+    /** Name of the educational institution */
     school: string;
+    /** Year of graduation or completion */
     year: string;
   }>;
+  /** An array of notable achievements or awards */
   achievements: string[];
 }
 
-const API_KEY = process.env.GEMINI_API_KEY;
-const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-exp-0827:generateContent?key=${API_KEY}`;
-
+/**
+ * Sends a message (prompt) along with a file to the Gemini API for processing.
+ *
+ * @async
+ * @param {string} prompt - The text prompt to send to the API.
+ * @param {string} fileUri - The URI of the file (CV) to be processed.
+ * @returns {Promise<string>} The response from the API as a string.
+ * @throws {Error} If there's a network error or the API returns a non-OK response.
+ */
 export async function sendMessage(
   prompt: string,
   fileUri: string
@@ -82,6 +128,14 @@ export async function sendMessage(
   }
 }
 
+/**
+ * Uploads a file to the Gemini API.
+ *
+ * @async
+ * @param {File} file - The file object to be uploaded.
+ * @returns {Promise<string>} The URI of the uploaded file.
+ * @throws {Error} If the upload fails or the API returns a non-OK response.
+ */
 export async function uploadFile(file: File): Promise<string> {
   const response = await fetch(
     `https://generativelanguage.googleapis.com/upload/v1beta/files?key=${API_KEY}`,
