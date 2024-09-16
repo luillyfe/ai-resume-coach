@@ -32,7 +32,11 @@ const TextFeedback: React.FC<{
   return (
     <>
       {feedback && (
-        <Card title="CV Feedback" className={`${styles} mb-4`}>
+        <Card
+          title="CV Feedback"
+          className={`${styles} mb-4`}
+          data-testid="article"
+        >
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             className="prose max-w-none"
