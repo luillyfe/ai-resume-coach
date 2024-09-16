@@ -18,14 +18,33 @@ import "./index.css";
 
 const { TabPane } = Tabs;
 
+/**
+ * Props for the CVAnalyzer component.
+ */
 interface CVAnalyzerProps {
+  /** The uploaded CV file. */
   file: RcFile | undefined;
 }
 
+/**
+ * CVAnalyzer component provides functionality to analyze a CV, get feedback,
+ * and display insights.
+ *
+ * @component
+ * @param {CVAnalyzerProps} props - The component props.
+ * @returns {React.ReactElement} The rendered CVAnalyzer component.
+ */
 const CVAnalyzer: React.FC<CVAnalyzerProps> = ({ file }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { feedback, cvData, updateStorage } = useCVStorage();
 
+  /**
+   * Handles the CV feedback request process.
+   *
+   * @async
+   * @param {FormData} formData - The form data containing the CV file.
+   * @throws {Error} If there's an issue with the request or processing.
+   */
   const handleRequestCVFeedback = async (formData: FormData) => {
     try {
       const fileUri = await sendFileToLLM(formData);
@@ -44,6 +63,12 @@ const CVAnalyzer: React.FC<CVAnalyzerProps> = ({ file }) => {
     }
   };
 
+  /**
+   * Initiates the process of getting feedback for the uploaded CV.
+   *
+   * @async
+   * @param {React.MouseEvent} event - The click event.
+   */
   const getFeedback = async (event: React.MouseEvent) => {
     event.preventDefault();
 
