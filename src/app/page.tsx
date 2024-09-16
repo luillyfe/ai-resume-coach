@@ -2,40 +2,12 @@
 import { useState } from "react";
 
 import { RcFile } from "antd/es/upload";
-import { message } from "antd";
 
-import { useCVStorage } from "@/app/hooks/useCVStorage";
-import {
-  extractCVData,
-  requestCVFeedback,
-  sendFileToLLM,
-} from "@/app/actions/LLM";
 import { PDFUploader } from "@/components/PDFUploader";
-import TextFeedback from "@/components/TextFeedback";
-import VisualCV from "@/components/VisualCV";
+import Feedback from "@/components/CVAnalyzer";
 
 export default function Home() {
   const [file, setFile] = useState<RcFile | undefined>();
-
-  const { feedback, cvData, updateStorage } = useCVStorage();
-
-  async function handleRequestCVFeedback(formData: FormData) {
-    try {
-      const fileUri = await sendFileToLLM(formData);
-      const { feedback } = await requestCVFeedback(fileUri);
-      updateStorage({ feedback });
-
-      if (fileUri && feedback) {
-        const extractedData = await extractCVData(fileUri, feedback);
-        updateStorage({ cvData: extractedData });
-      }
-    } catch (error) {
-      console.error("Error in handleRequestCVFeedback:", error);
-      message.error(
-        "There was a problem on your request, try again in a few seconds!"
-      );
-    }
-  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -43,12 +15,7 @@ export default function Home() {
         <h1 className="text-2xl font-bold mb-4">AI Resume Coach</h1>
         <div className="p-4 max-w-2xl mx-auto">
           <PDFUploader handleFile={setFile} />
-          <TextFeedback
-            feedback={feedback}
-            requestCVFeedback={handleRequestCVFeedback}
-            file={file}
-          />
-          {cvData && <VisualCV cvData={cvData} />}
+          <Feedback file={file} />
         </div>
       </main>
       <footer className="py-4 text-center text-sm text-gray-500">
