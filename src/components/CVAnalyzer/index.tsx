@@ -1,6 +1,5 @@
-import { useState, MouseEvent } from "react";
-
-import { Tabs, message, Button, Spin } from "antd";
+import React, { useState } from "react";
+import { Button, Spin, Tabs, message } from "antd";
 import { RcFile } from "antd/es/upload";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 
@@ -12,16 +11,22 @@ import {
 import { useCVStorage } from "@/app/hooks/useCVStorage";
 
 import PDFGenerator from "@/components/PDFGenerator";
-import TextFeedback from "@/components/TextFeedback";
-import VisualCV from "@/components/VisualCV";
+import CVFeedback from "@/components/CVFeedback";
+import CVInsights from "@/components/CVInsights";
+
+import "./index.css";
 
 const { TabPane } = Tabs;
 
-function Feedback({ file }: { file: RcFile | undefined }) {
-  const [loading, setLoading] = useState<boolean>(false);
+interface CVAnalyzerProps {
+  file: RcFile | undefined;
+}
+
+const CVAnalyzer: React.FC<CVAnalyzerProps> = ({ file }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const { feedback, cvData, updateStorage } = useCVStorage();
 
-  async function handleRequestCVFeedback(formData: FormData) {
+  const handleRequestCVFeedback = async (formData: FormData) => {
     try {
       const fileUri = await sendFileToLLM(formData);
       const { feedback } = await requestCVFeedback(fileUri);
@@ -34,21 +39,13 @@ function Feedback({ file }: { file: RcFile | undefined }) {
     } catch (error) {
       console.error("Error in handleRequestCVFeedback:", error);
       message.error(
-        "There was a problem on your request, try again in a few seconds!"
+        "There was a problem with your request. Please try again in a few seconds."
       );
     }
-  }
+  };
 
-  /**
-   * Handles the feedback request when the "Get Feedback" button is clicked.
-   *
-   * @param {MouseEvent} event - The click event
-   * @returns {Promise<void>}
-   *
-   * @throws {Error} If the CV file is not uploaded
-   */
-  const getFeedback = async (event: MouseEvent): Promise<void> => {
-    event.stopPropagation();
+  const getFeedback = async (event: React.MouseEvent) => {
+    event.preventDefault();
 
     if (!file) {
       message.error("Please upload a CV first");
@@ -56,7 +53,7 @@ function Feedback({ file }: { file: RcFile | undefined }) {
     }
 
     try {
-      setLoading(true);
+      setIsLoading(true);
       const formData = new FormData();
       formData.append("cv", file);
       await handleRequestCVFeedback(formData);
@@ -64,51 +61,49 @@ function Feedback({ file }: { file: RcFile | undefined }) {
       console.error("Error requesting CV feedback:", error);
       message.error("Failed to get feedback. Please try again.");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <>
-      <>
+    <div className="cv-analyzer">
+      <div className="cv-analyzer__actions">
         <Button
           onClick={getFeedback}
-          disabled={!file || loading}
-          className="mb-4"
+          disabled={!file || isLoading}
+          className="cv-analyzer__action-button"
         >
           Get Feedback
         </Button>
 
-        {loading && <Spin className="mb-4" />}
+        {isLoading && <Spin className="cv-analyzer__loading-spinner" />}
 
         {feedback && (
           <PDFDownloadLink
             document={<PDFGenerator feedback={feedback} />}
             fileName="cv_feedback.pdf"
           >
-            {({ loading }) =>
-              loading ? (
-                "Preparing PDF..."
-              ) : (
-                <Button className="mb-4">Download PDF</Button>
-              )
-            }
+            {({ loading }) => (
+              <Button disabled={loading} className="cv-analyzer__action-button">
+                {loading ? "Preparing PDF..." : "Download PDF"}
+              </Button>
+            )}
           </PDFDownloadLink>
         )}
-      </>
+      </div>
 
       {feedback && (
-        <Tabs defaultActiveKey="2">
-          <TabPane tab="Insights" key="1">
-            {cvData && <VisualCV cvData={cvData} />}
+        <Tabs defaultActiveKey="feedback" className="cv-analyzer__results">
+          <TabPane tab="Feedback" key="feedback">
+            <CVFeedback feedback={feedback} styles="cv-feedback" />
           </TabPane>
-          <TabPane tab="Feedback" key="2">
-            <TextFeedback feedback={feedback} />
+          <TabPane tab="Insights" key="insights">
+            {cvData && <CVInsights cvData={cvData} styles="cv-insights" />}
           </TabPane>
         </Tabs>
       )}
-    </>
+    </div>
   );
-}
+};
 
-export default Feedback;
+export default CVAnalyzer;
