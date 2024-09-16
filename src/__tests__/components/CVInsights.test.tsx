@@ -3,8 +3,8 @@ import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { render } from "@testing-library/react";
 
-import { CVData } from "@/app/LLM";
-import VisualCV from "@/components/VisualCV";
+import { CVData } from "@/app/LLM/LLMClient";
+import CVInsights from "@/components/CVInsights";
 
 // Mock the ResizeObserver
 const ResizeObserverMock = vi.fn(() => ({
@@ -16,7 +16,7 @@ const ResizeObserverMock = vi.fn(() => ({
 // Stub the global ResizeObserver
 vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 
-describe("VisualCV", () => {
+describe("CVInsights", () => {
   const cvData: CVData = {
     name: "John Doe",
     title: "Software Engineer",
@@ -29,7 +29,6 @@ describe("VisualCV", () => {
         responsibilities: [],
       },
     ],
-    // TODO: make sure they get render into the chart
     skills: [
       { skill: "JavaScript", proficiency: 90 },
       { skill: "React", proficiency: 80 },
@@ -48,7 +47,9 @@ describe("VisualCV", () => {
   };
 
   it("renders CV data correctly", () => {
-    const { getByText, getAllByText } = render(<VisualCV cvData={cvData} />);
+    const { getByText, getAllByText } = render(
+      <CVInsights cvData={cvData} styles="" />
+    );
 
     expect(getByText("John Doe")).toBeInTheDocument();
     expect(getAllByText("Software Engineer")[0]).toBeInTheDocument();
