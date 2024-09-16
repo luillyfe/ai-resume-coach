@@ -16,8 +16,6 @@ import CVInsights from "@/components/CVInsights";
 
 import "./index.css";
 
-const { TabPane } = Tabs;
-
 /**
  * Props for the CVAnalyzer component.
  */
@@ -89,6 +87,18 @@ const CVAnalyzer: React.FC<CVAnalyzerProps> = ({ file }) => {
       setIsLoading(false);
     }
   };
+  const items = [
+    {
+      label: "Feedback",
+      key: "Feedback",
+      children: <CVFeedback feedback={feedback} styles="cv-feedback" />,
+    },
+    {
+      label: "Insights",
+      key: "Insights",
+      children: cvData && <CVInsights cvData={cvData} styles="cv-insights" />,
+    },
+  ];
 
   return (
     <div className="cv-analyzer">
@@ -101,7 +111,9 @@ const CVAnalyzer: React.FC<CVAnalyzerProps> = ({ file }) => {
           Get Feedback
         </Button>
 
-        {isLoading && <Spin className="cv-analyzer__loading-spinner" />}
+        {isLoading && (
+          <Spin className="cv-analyzer__loading-spinner" data-testid="status" />
+        )}
 
         {feedback && (
           <PDFDownloadLink
@@ -118,14 +130,11 @@ const CVAnalyzer: React.FC<CVAnalyzerProps> = ({ file }) => {
       </div>
 
       {feedback && (
-        <Tabs defaultActiveKey="feedback" className="cv-analyzer__results">
-          <TabPane tab="Feedback" key="feedback">
-            <CVFeedback feedback={feedback} styles="cv-feedback" />
-          </TabPane>
-          <TabPane tab="Insights" key="insights">
-            {cvData && <CVInsights cvData={cvData} styles="cv-insights" />}
-          </TabPane>
-        </Tabs>
+        <Tabs
+          items={items}
+          defaultActiveKey="feedback"
+          className="cv-analyzer__results"
+        />
       )}
     </div>
   );
