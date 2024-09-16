@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { User, Briefcase, GraduationCap, Code, Award } from "lucide-react";
-import { CVData } from "@/app/LLM";
+import { CVData } from "@/app/LLM/LLMClient";
 
 /**
  *  Renders a visually appealing CV based on the provided data,
@@ -19,15 +19,22 @@ import { CVData } from "@/app/LLM";
  * @param {CVData} props.cvData - The CV data to display.
  * @returns {JSX.Element} - The rendered VisualCV component.
  */
-const VisualCV = ({ cvData }: { cvData: CVData }) => {
+const VisualCV: React.FC<{
+  cvData: CVData;
+  styles: string;
+}> = ({ cvData, styles }) => {
   // Transform skills data for the bar chart
-  const skillsData = cvData.skills.map((skill) => ({
-    name: skill.skill,
-    proficiency: skill.proficiency,
-  }));
+  const skillsData = cvData.skills.map(
+    (skill: { skill: string; proficiency: number }) => ({
+      name: skill.skill,
+      proficiency: skill.proficiency,
+    })
+  );
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6 max-w-4xl mx-auto">
+    <div
+      className={`${styles} bg-white shadow-lg rounded-lg p-6 max-w-4xl mx-auto`}
+    >
       {/* Header Section */}
       <div className="flex items-center mb-6">
         {/* Placeholder for profile picture */}
