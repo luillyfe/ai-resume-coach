@@ -6,18 +6,21 @@ Imagine having a seasoned tech recruiter, a sharp-eyed editor, and a Silicon Val
 
 ## 🧠 What's Under the Hood?
 
-At the heart of CV AI Coach lies a powerful AI brain, fueled by Google's Gemini 1.5 Pro. It's like having GPT's cooler, more focused cousin dedicated solely to making your CV shine. Here's the secret sauce:
+At the heart of CV AI Coach lies a powerful AI brain, leveraging Google's Gemini 1.5 Pro model. Here's the secret sauce:
 
 1. **PDF Whisperer**: We speak fluent PDF. Upload your resume, and we'll extract every juicy detail.
 2. **AI Magnifying Glass**: Our Gemini-powered algorithm dissects your CV with the precision of a surgeon and the creativity of a poet.
 3. **Markdown Magician**: Feedback so beautifully formatted, you'll want to frame it. (But please don't – update your CV instead!)
+4. **PDF Alchemist**: Transform your feedback into a sleek, professional PDF report with a click.
 
 ## 🛠 Tech Stack Lowdown
 
 - **Next.js**: Because we believe in living on the edge... of web technology.
 - **React**: For UI smoothness that'll make you go "Oooh!"
 - **Ant Design**: Our secret to looking good without trying too hard.
-- **Google Gemini API**: The brains of the operation. Don't tell GPT, but we think Gemini's got an edge when it comes to CV analysis.
+- **Recharts**: For visualizing your CV insights with style.
+- **Google Gemini API**: Powering our analysis with cutting-edge language models.
+- **react-pdf**: Turning our markdown feedback into stunning PDF reports.
 
 ## 🚦 Getting Started
 
@@ -27,7 +30,7 @@ At the heart of CV AI Coach lies a powerful AI brain, fueled by Google's Gemini 
    ```
    GEMINI_API_KEY=your_secret_key_here
    ```
-   (Don't have a Gemini API key? Time to make friends at Google!)
+   (You'll need a Gemini API key from Google. Don't have one? Time to make friends at Mountain View!)
 4. **Fire it up**: `npm run dev`
 5. **Upload your CV**: And watch the magic happen!
 
@@ -35,21 +38,26 @@ At the heart of CV AI Coach lies a powerful AI brain, fueled by Google's Gemini 
 
 Want to tweak the AI prompts? Fancy a different UI? Go wild! The code is your oyster. Just remember:
 
-- The AI prompt lives in `LLM.tsx`. Adjust it to focus on specific industries or roles.
-- UI components are in `Feedback.tsx`. Feel free to jazz it up!
+- AI interactions are handled in `LLM.ts` and `LLMClient.tsx`. Adjust the prompts or integrate different AI services here.
+- UI components like `CVAnalyzer`, `CVFeedback`, and `CVInsights` are in the `components` folder. Feel free to jazz them up!
+- The `PDFGenerator` component in `PDFGenerator.tsx` controls the PDF output. Tweak it to change the look of your reports.
 
 ## 🤓 For the Nerds
 
-- We're using Next.js App Router. It's new, it's shiny, and it's fast!
-- Server-side functions handle the heavy lifting, keeping your client lean and mean.
-- We've got TypeScript sprinkled throughout because we believe in catching errors before they catch you off guard.
+- We're using Next.js App Router for efficient server-side rendering and API routes.
+- React hooks (`useCVStorage`) manage state and side effects.
+- TypeScript is used throughout for type safety and better developer experience.
+- Recharts library is employed for creating insightful visualizations of CV data.
+- Google's Gemini 1.5 Pro model powers our AI analysis, with custom prompts for CV feedback and data extraction.
+- The `react-pdf` library transforms our markdown feedback into polished PDF reports.
 
 ## 🚧 Roadmap
 
-- [ ] Add support for more file types (Looking at you, LaTeX aficionados)
+- [ ] Enhance CV data extraction and analysis
 - [ ] Implement user accounts for tracking CV versions
 - [ ] Integrate with job boards for tailored recommendations
-- [ ] Develop an AI model fine-tuned specifically for CV analysis
+- [ ] Expand visualizations and insights in the CVInsights component
+- [ ] Add more customization options for PDF reports
 
 ## 🤝 Contributing
 
