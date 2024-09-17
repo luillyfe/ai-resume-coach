@@ -4,7 +4,7 @@ import { useState } from "react";
 import { RcFile } from "antd/es/upload";
 
 import { PDFUploader } from "@/components/PDFUploader";
-import Feedback from "@/components/CVAnalyzer";
+import CVAnalyzer from "@/components/CVAnalyzer";
 
 export default function Home() {
   const [file, setFile] = useState<RcFile | undefined>();
@@ -15,7 +15,7 @@ export default function Home() {
         <h1 className="text-2xl font-bold mb-4">AI Resume Coach</h1>
         <div className="p-4 max-w-2xl mx-auto">
           <PDFUploader handleFile={setFile} />
-          <Feedback file={file} />
+          <CVAnalyzer file={file} />
         </div>
       </main>
       <footer className="py-4 text-center text-sm text-gray-500">
