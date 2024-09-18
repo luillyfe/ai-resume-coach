@@ -22,6 +22,24 @@ const API_KEY = process.env.GEMINI_API_KEY;
 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-exp-0827:generateContent?key=${API_KEY}`;
 
 /**
+ * @constant {string} CV_REVIEW_INSTRUCTIONS - The system instructions for CV review.
+ * @private
+ */
+const CV_REVIEW_INSTRUCTIONS = `
+You are an expert CV reviewer for the tech industry. Analyze the following CV and provide detailed, actionable feedback. Focus on:
+1. Overall structure and formatting
+2. Professional summary
+3. Work experience (including quantifiable achievements)
+4. Skills section
+5. Education and certifications
+6. Projects or portfolio
+7. Tailoring for tech roles
+
+Provide specific suggestions for improvement and highlight any red flags. 
+Format your response in markdown for easy reading.
+`;
+
+/**
  * Represents the structure of a CV (Curriculum Vitae).
  * @interface CVData
  */
@@ -77,6 +95,14 @@ export async function sendMessage(
   fileUri: string
 ): Promise<string> {
   const requestBody = {
+    systemInstruction: {
+      role: "user",
+      parts: [
+        {
+          text: CV_REVIEW_INSTRUCTIONS,
+        },
+      ],
+    },
     contents: [
       {
         role: "user",
@@ -113,14 +139,14 @@ export async function sendMessage(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(requestBody), // Stringify the request body
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
 
-    const data = await response.text(); // Response is plain text
+    const data = await response.text();
     return data;
   } catch (error) {
     console.error("There was a problem with the fetch operation:", error);
