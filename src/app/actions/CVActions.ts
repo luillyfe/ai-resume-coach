@@ -1,5 +1,5 @@
 "use server";
-import { CVData, sendMessage, uploadFile } from "@/app/LLM/LLMClient";
+import { CVData, sendMessage, uploadFile } from "@/app/LLM/CVReviewerClient";
 import { formatGeminiOutput } from "@/lib/LLMUtils";
 
 // Server Function
