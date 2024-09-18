@@ -3,11 +3,11 @@
  * @description A custom React hook for managing CV data storage in localStorage.
  *
  * @requires react
- * @requires @/app/LLM/LLMClient
+ * @requires @/app/LLM/CVReviewerClient
  */
 
 import { useState, useEffect } from "react";
-import { CVData } from "@/app/LLM/LLMClient";
+import { CVData } from "@/app/LLM/CVReviewerClient";
 
 /**
  * @interface CVStorage
