@@ -6,19 +6,7 @@ import { formatGeminiOutput } from "@/lib/LLMUtils";
 export async function requestCVFeedback(
   resumeUri: string
 ): Promise<{ feedback: string }> {
-  const prompt = `
-          You are an expert CV reviewer for the tech industry. Analyze the following CV and provide detailed, actionable feedback. Focus on:
-          1. Overall structure and formatting
-          2. Professional summary
-          3. Work experience (including quantifiable achievements)
-          4. Skills section
-          5. Education and certifications
-          6. Projects or portfolio
-          7. Tailoring for tech roles
-    
-          Provide specific suggestions for improvement and highlight any red flags. 
-          Format your response in markdown for easy reading.
-        `;
+  const prompt = "Please review the attached CV and provide feedback.";
 
   const geminiData = await sendMessage(prompt, resumeUri);
   const feedback = formatGeminiOutput(geminiData);
