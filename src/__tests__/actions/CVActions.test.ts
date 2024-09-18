@@ -1,10 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { CVData } from "@/app/LLM/LLMClient";
+import { CVData, sendMessage } from "@/app/LLM/CVReviewerClient";
 import { requestCVFeedback, extractCVData } from "@/app/actions/CVActions";
-import { sendMessage } from "@/app/LLM/LLMClient";
 
 // Mock the LLMClient module
-vi.mock("@/app/LLM/LLMClient", () => ({
+vi.mock("@/app/LLM/CVReviewerClient", () => ({
   sendMessage: vi.fn(),
 }));
 

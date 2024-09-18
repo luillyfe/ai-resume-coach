@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { sendMessage, uploadFile } from "@/app/LLM/LLMClient";
+import { sendMessage, uploadFile } from "@/app/LLM/CVReviewerClient";
 
 // Mock the global fetch function
 global.fetch = vi.fn();
