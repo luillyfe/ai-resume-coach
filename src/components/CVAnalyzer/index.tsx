@@ -7,7 +7,7 @@ import {
   extractCVData,
   requestCVFeedback,
   sendFileToLLM,
-} from "@/app/actions/LLM";
+} from "@/app/actions/CVActions";
 import { useCVStorage } from "@/app/hooks/useCVStorage";
 
 import PDFGenerator from "@/components/PDFGenerator";

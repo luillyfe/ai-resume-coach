@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { CVData } from "@/app/LLM/LLMClient";
-import { requestCVFeedback, extractCVData } from "@/app/actions/LLM";
+import { requestCVFeedback, extractCVData } from "@/app/actions/CVActions";
 import { sendMessage } from "@/app/LLM/LLMClient";
 
 // Mock the LLMClient module

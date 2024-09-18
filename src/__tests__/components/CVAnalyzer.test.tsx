@@ -7,13 +7,13 @@ import {
   sendFileToLLM,
   requestCVFeedback,
   extractCVData,
-} from "@/app/actions/LLM";
+} from "@/app/actions/CVActions";
 
 import { RcFile } from "antd/es/upload";
 
 // Mock the external dependencies
 vi.mock("@/app/hooks/useCVStorage");
-vi.mock("@/app/actions/LLM", () => ({
+vi.mock("@/app/actions/CVActions", () => ({
   sendFileToLLM: vi.fn(),
   requestCVFeedback: vi.fn().mockReturnValue({ feedback: "" }),
   extractCVData: vi.fn(),
